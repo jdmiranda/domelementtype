@@ -1,36 +1,39 @@
 /** Types of elements found in htmlparser2's DOM */
 export enum ElementType {
     /** Type for the root element of a document */
-    Root = "root",
+    Root = 0,
     /** Type for Text */
-    Text = "text",
+    Text = 1,
     /** Type for <? ... ?> */
-    Directive = "directive",
+    Directive = 2,
     /** Type for <!-- ... --> */
-    Comment = "comment",
+    Comment = 3,
     /** Type for <script> tags */
-    Script = "script",
+    Script = 4,
     /** Type for <style> tags */
-    Style = "style",
+    Style = 5,
     /** Type for Any tag */
-    Tag = "tag",
+    Tag = 6,
     /** Type for <![CDATA[ ... ]]> */
-    CDATA = "cdata",
+    CDATA = 7,
     /** Type for <!doctype ...> */
-    Doctype = "doctype",
+    Doctype = 8,
 }
+
+// Bitwise flag for tag types (Tag, Script, Style)
+const TAG_TYPES_FLAG =
+    (1 << ElementType.Tag) |
+    (1 << ElementType.Script) |
+    (1 << ElementType.Style);
 
 /**
  * Tests whether an element is a tag or not.
+ * Optimized using bitwise operations for performance.
  *
  * @param elem Element to test
  */
 export function isTag(elem: { type: ElementType }): boolean {
-    return (
-        elem.type === ElementType.Tag ||
-        elem.type === ElementType.Script ||
-        elem.type === ElementType.Style
-    );
+    return (TAG_TYPES_FLAG & (1 << elem.type)) !== 0;
 }
 
 // Exports for backwards compatibility
